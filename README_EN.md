@@ -25,6 +25,21 @@ It does not simply download website source code. It follows a verifiable impleme
 4. Implement it in an existing React, Vue, Next.js, or other frontend project
 5. Run the app, capture screenshots, compare results, and iterate
 
+## What It Can Replicate
+
+- **Page layout**: navigation bars, Hero sections, cards, pricing tables, sidebars, and footers
+- **Visual styling**: colors, typography, spacing, radii, borders, gradients, and shadows
+- **Responsive behavior**: layout changes across desktop, tablet, and mobile
+- **Interaction states**: hover, click, selected, expanded, modal, drawer, and menu states
+- **Motion**: scroll reveals, parallax, card movement, number animations, and page transitions
+- **Individual components**: buttons, forms, search fields, carousels, and pricing cards
+- **Complete pages**: landing pages, product websites, dashboards, portfolios, and blog home pages
+- **Screenshot-based designs**: analyze and rebuild an interface even when no live URL is available
+- **Motion shown in videos**: study the interaction sequence, timing, and state changes, then reimplement them
+- **Design language**: extract the reference site's visual rules and apply them to your own content and brand
+
+It replicates how a website looks and behaves. Backends, databases, private APIs, and unauthorized brand assets are outside its scope.
+
 ## Use Cases
 
 - Use a strong landing page as visual inspiration for your own product
