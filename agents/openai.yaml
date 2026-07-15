@@ -1,4 +1,4 @@
 interface:
   display_name: "Replicate Web UI"
-  short_description: "Rebuild reference website visuals in your own app"
-  default_prompt: "Use $replicate-web-ui to analyze a reference website and recreate its visual system in my project."
+  short_description: "Rebuild web visuals, interactions, and motion"
+  default_prompt: "Use $replicate-web-ui to analyze this URL, screenshot, or video and rebuild the experience in my existing frontend project."

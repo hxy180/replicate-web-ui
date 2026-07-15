@@ -25,6 +25,8 @@ It does not simply download website source code. It follows a verifiable impleme
 4. Implement it in an existing React, Vue, Next.js, or other frontend project
 5. Run the app, capture screenshots, compare results, and iterate
 
+The complete workflow is: **preflight → reconnaissance → component specifications → brand adaptation → incremental implementation → multi-viewport QA**. For complex pages, the Skill records the implementation evidence in `docs/replicate-ui/` instead of relying on visual guesswork.
+
 ## What It Can Replicate
 
 - **Page layout**: navigation bars, Hero sections, cards, pricing tables, sidebars, and footers
@@ -142,11 +144,17 @@ The default is `close`.
 ## What the Skill Does
 
 - Preserves the target project's framework, components, and design tokens
-- Uses a real browser to inspect pages and interaction states
-- Covers responsive desktop and mobile layouts
+- Uses a real browser to observe scrolling before exercising reversible interaction states
+- Records layout changes at key widths such as `1440px`, `768px`, and `390px`
+- Extracts real geometry, typography, color, shadow, and motion values from representative elements with `getComputedStyle()`
+- Produces concise reference, behavior, and component specifications for complex pages, separating observations, inferences, and intentional differences
+- Uses input-specific analysis for URLs, screenshots, videos, and GIFs
+- Provides fallbacks for network failures, blocked pages, missing fonts, and unavailable assets
 - Maintains semantic HTML, keyboard access, and reduced-motion support
 - Runs available tests, lint, and build commands
 - Uses screenshot comparison as a visual verification signal
+
+The Skill does not force Next.js, React, Tailwind, or shadcn/ui. It follows the target repository's existing stack and component boundaries.
 
 ## Safety and Copyright Boundaries
 
@@ -162,7 +170,8 @@ replicate-web-ui/
 ├── agents/openai.yaml
 ├── references/
 │   ├── visual-analysis.md
-│   └── compliance-boundaries.md
+│   ├── compliance-boundaries.md
+│   └── research-templates.md
 └── scripts/
     └── compare_screenshots.py
 ```

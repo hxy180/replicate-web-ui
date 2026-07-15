@@ -1,96 +1,130 @@
 ---
 name: replicate-web-ui
-description: Analyze the visual design and interaction behavior of a reference website, then rebuild that experience inside the user's own frontend project using its existing framework and conventions. Use when the user asks to recreate, replicate, migrate, imitate, or take inspiration from a URL, screenshot, landing page, component, animation, responsive layout, or web interaction. Implement and verify the result rather than stopping at design analysis. Do not use to copy private source code, protected brand assets, deceptive authentication/payment pages, or websites the user is not authorized to reproduce exactly.
+description: Analyze and rebuild the visual design, responsive layout, components, interaction states, and motion of a reference URL, screenshot, or video inside the user's existing frontend project. Use when the user asks to recreate, clone, replicate, migrate, reverse engineer, or take inspiration from a website, page, component, animation, or design language. Inspect the reference, document evidence when useful, implement with the target project's current framework, and verify the result in a real browser. Do not use to copy private source code, protected brand assets, deceptive authentication or payment pages, or material the user is not authorized to reproduce exactly.
 ---
 
 # Replicate Web UI
 
-Rebuild a reference site's design system and behavior in the user's own codebase. Treat the reference as visual evidence, not as source code to copy.
+Rebuild how a reference interface looks and behaves using original, project-native code. Treat the reference as visual and behavioral evidence, not as source code to copy.
 
-## Required Inputs
+## Inputs and defaults
 
-Identify these from the request and workspace:
+Discover from the request and workspace:
 
-- Reference URL, screenshot, or video
-- Target repository and route/component
-- Existing frontend framework and styling system
-- Desired fidelity: `inspired`, `close`, or `exact-authorized`
-- Important viewports and interactions
+- Reference URL, screenshot, video, or combination
+- Target repository and route or component
+- Existing framework, styling system, design tokens, and commands
+- Fidelity: `inspired`, `close`, or `exact-authorized`
+- Important viewports, states, and motion
 
-Ask only when the reference or target cannot be discovered. Default to `close` fidelity, desktop plus mobile, and the project's current stack.
+Ask only when the reference or target cannot be discovered. Default to `close`, the target project's current stack, and desktop, tablet, and mobile verification.
 
-For `exact-authorized`, require a clear statement that the user owns the page or has permission. Otherwise use `close` and replace identity-bearing assets.
+Require a clear ownership or permission statement before using `exact-authorized`. Otherwise use `close` and replace identity-bearing material.
 
 ## Workflow
 
-### 1. Inspect the target project
+### 1. Preflight
 
-- Read the repository before designing.
-- Identify framework, router, package manager, component library, tokens, fonts, and test commands.
-- Preserve established architecture and reusable components.
-- Check the worktree and protect unrelated changes.
+- Inspect the target repository before choosing an implementation.
+- Identify its framework, router, package manager, component library, tokens, fonts, asset conventions, and test commands.
+- Check the worktree and preserve unrelated changes.
+- Confirm that the reference is accessible and that browser or media-inspection tools are available.
+- Read [references/compliance-boundaries.md](references/compliance-boundaries.md) for sensitive, brand-heavy, proprietary, login, payment, financial, medical, or government interfaces.
+- For a full page or multi-component task, create `docs/replicate-ui/`; skip research files for a small component unless they reduce ambiguity.
 
-### 2. Capture the reference
+If no target project exists, ask before scaffolding one. Do not assume Next.js, React, Tailwind, or any component library.
 
-- Use an available browser automation skill or Playwright to inspect the live page.
-- Capture full-page and viewport screenshots at desktop and mobile sizes.
-- Exercise meaningful states: hover, focus, expanded menus, dialogs, carousels, and scroll-triggered motion.
-- Record layout geometry, typography, color, spacing, radius, shadows, imagery, and motion.
-- If access is blocked, use user-provided screenshots or videos and state the missing states.
+### 2. Reconnaissance
 
-Read [references/visual-analysis.md](references/visual-analysis.md) before analyzing a new reference.
+Read [references/visual-analysis.md](references/visual-analysis.md), then collect evidence appropriate to the input.
 
-### 3. Define the adaptation
+#### Live URL
 
-- Separate design principles from brand identity.
-- Map the reference structure to the user's content and product goals.
-- Reuse target-project tokens where close enough; add a small token layer only when needed.
-- Replace logos, trademarks, copyrighted illustrations, proprietary copy, and paid fonts unless supplied or licensed by the user.
-- Prefer local placeholders or clearly licensed assets over hotlinking.
+1. Capture the top and full page at `1440px`, `768px`, and `390px`, plus any visible breakpoint.
+2. Scroll from top to bottom before clicking. Record sticky navigation, reveals, parallax, scroll snapping, and layout transitions.
+3. Exercise meaningful hover, focus, active, selected, expanded, loading, error, menu, drawer, modal, carousel, and accordion states.
+4. Use computed styles on representative elements to measure geometry, typography, color, borders, shadows, positioning, transitions, and animation. Do not estimate values that can be inspected.
+5. Inventory images, video, SVG, icons, and fonts, but download or reuse only material the user may lawfully use.
 
-Read [references/compliance-boundaries.md](references/compliance-boundaries.md) when the page contains login, payment, financial, medical, government, brand-sensitive, or proprietary content.
+Do not click irreversible controls, submit forms, authenticate, purchase, delete, or mutate external data merely to observe a state.
 
-### 4. Implement end to end
+#### Screenshot
 
-- Build the requested page or component in the target project.
-- Match large geometry first, then typography and spacing, then decorative detail and motion.
-- Implement responsive behavior intentionally; do not merely shrink the desktop layout.
-- Preserve semantic HTML, keyboard access, visible focus, reduced-motion support, and readable contrast.
-- Avoid adding dependencies when the existing stack can produce the effect.
-- Do not copy minified bundles, hidden APIs, tracking code, or private source.
+- Measure geometry, hierarchy, alignment, aspect ratios, typography, spacing, and visual tokens from visible evidence.
+- Distinguish observed facts from inferred responsive or interactive behavior.
+- Request additional states only when an unsupported inference would materially affect the implementation.
 
-### 5. Verify visually
+#### Video or GIF
 
-- Start the target app and load the implemented route in a real browser.
-- Capture the same viewports and states used for the reference.
-- Compare reference and implementation side by side.
-- Fix overflow, wrapping, stacking, font metrics, spacing, breakpoint, and animation errors.
-- Run relevant repository tests, lint, and build commands.
+- Review the sequence at normal speed and frame by frame around transitions.
+- Record trigger, initial state, final state, duration, delay, easing, direction, stagger, and interruption behavior.
+- Map each visible moment to a component state; do not treat the video as a single static screenshot.
 
-For same-size PNG comparisons, run:
+If access is blocked, continue from available screenshots or video and report which states could not be observed.
+
+### 3. Build a reference specification
+
+For a complex page, write only the artifacts that will guide implementation:
+
+- `docs/replicate-ui/REFERENCE.md`: capture matrix, design tokens, asset decisions, and breakpoint summary
+- `docs/replicate-ui/BEHAVIORS.md`: scroll and interaction state table
+- `docs/replicate-ui/components/<name>.md`: component geometry, layering, states, content, and responsive behavior
+
+Use [references/research-templates.md](references/research-templates.md) for concise templates. Record evidence, not copied production markup. Outer HTML may be inspected to understand layering, but do not paste it into the implementation as a shortcut.
+
+### 4. Define the adaptation
+
+- Separate reusable design principles from the reference's identity.
+- Map reference sections to the user's content, product goals, and information architecture.
+- Reuse target-project tokens and components where close enough; add a small token layer only when needed.
+- Replace logos, trademarks, proprietary copy, copyrighted illustrations, photography, paid fonts, and tracking identifiers unless the user supplies them or confirms rights.
+- Prefer local, licensed assets. Never hotlink production assets as a permanent implementation.
+- Preserve the fidelity contract: `inspired` may change composition, `close` matches experience while changing identity, and `exact-authorized` pursues pixel-level similarity for authorized material.
+
+### 5. Implement incrementally
+
+- Match page shell and large geometry first, then responsive flow, typography, spacing, visual detail, interaction, and motion.
+- Follow the repository's component boundaries and naming conventions. Do not force one file per visual block when the codebase uses another pattern.
+- Keep each meaningful component runnable before moving on. Run the cheapest relevant typecheck, unit test, or build check at useful milestones.
+- Use semantic HTML, keyboard-accessible controls, visible focus, readable contrast, and `prefers-reduced-motion` fallbacks.
+- Use precise values when the reference depends on them, but avoid brittle absolute positioning when normal layout can reproduce the behavior.
+- Avoid new dependencies when the existing stack can implement the effect.
+- Do not copy minified bundles, hidden APIs, analytics, credentials, or private source.
+
+### 6. Assemble and verify
+
+1. Start the target application and open the implemented route in a real browser.
+2. Capture the same viewports and states used during reconnaissance.
+3. Compare reference and implementation section by section, not only above the fold.
+4. Fix overflow, wrapping, stacking, font metrics, spacing, crop, breakpoint, state, and animation discrepancies.
+5. Verify keyboard interaction, focus, reduced motion, and basic contrast where relevant.
+6. Run repository tests, lint, typecheck, and build commands appropriate to the change.
+
+For same-size PNGs, use:
 
 ```powershell
 python scripts/compare_screenshots.py reference.png implementation.png --diff diff.png
 ```
 
-Treat the numeric score as a signal, not as the goal. Intentional brand and content changes should remain different.
+Treat the score as diagnostic evidence, not the objective. Intentional changes in branding and content should remain different.
 
-### 6. Report the result
+## Failure handling
 
-Summarize:
+- Browser blocked: use supplied media, document unavailable states, and avoid pretending hidden behavior was verified.
+- Cross-origin styles inaccessible: inspect representative elements through computed styles instead of scraping stylesheets.
+- Font or asset unavailable: use a licensed metric-compatible substitute and record the difference.
+- Network or download failure: retry a bounded number of times, then use a local substitute without blocking unrelated implementation.
+- Reference changes during work: preserve timestamped captures and implement against the captured state.
+- Existing tests fail before edits: distinguish baseline failures from regressions and report both.
+
+## Completion standard
+
+Do not stop at a style audit, screenshots, specifications, or a plan when implementation was requested. Finish when the requested code runs, relevant states are visually checked, and verification results and intentional differences are reported, unless an external blocker makes that impossible.
+
+Report:
 
 - What was implemented
 - Which reference traits were preserved
 - Which assets or behaviors were intentionally changed
-- Viewports and interactions verified
-- Tests run and any remaining limitation
-
-## Fidelity Levels
-
-- `inspired`: Transfer the design language while changing composition and identity.
-- `close`: Match layout, rhythm, hierarchy, and motion while replacing brand-specific material.
-- `exact-authorized`: Pursue pixel-level similarity only for user-owned or explicitly authorized material.
-
-## Completion Standard
-
-Do not stop after screenshots, a style audit, or a plan when the user requested implementation. Finish only after the target code runs and the requested states have been visually checked, unless an external blocker makes that impossible.
+- Viewports and states verified
+- Commands run and remaining limitations

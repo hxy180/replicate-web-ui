@@ -25,6 +25,8 @@
 4. 在现有 React、Vue、Next.js 或其他前端项目中实现
 5. 启动项目并截图，对比参考效果后继续修正
 
+完整流程为：**预检 → 参考侦察 → 组件规格 → 品牌适配 → 增量实现 → 多尺寸 QA**。对于复杂页面，Skill 会把关键证据整理到 `docs/replicate-ui/`，避免只凭截图和感觉写代码。
+
 ## 它能复制什么
 
 - **页面布局**：导航栏、Hero、卡片、定价表、侧边栏和页脚
@@ -142,11 +144,17 @@ replicate-web-ui/SKILL.md
 ## Skill 会做什么
 
 - 优先沿用目标项目现有框架、组件和设计变量
-- 使用真实浏览器检查页面与交互状态
-- 覆盖桌面端和移动端响应式布局
+- 使用真实浏览器先观察滚动行为，再检查可逆的交互状态
+- 在 `1440px`、`768px` 和 `390px` 等关键宽度下记录布局变化
+- 通过 `getComputedStyle()` 提取代表性元素的真实尺寸、字体、颜色、阴影和动画参数
+- 为复杂页面生成参考摘要、行为表和组件规格，记录观察值、推测值与有意差异
+- 对网址、截图、视频和 GIF 使用不同的分析方法
+- 对网络失败、页面阻断、字体缺失和资源不可用提供回退策略
 - 保留语义化 HTML、键盘操作和减少动画支持
 - 运行项目现有的测试、Lint 和构建命令
 - 使用截图差异脚本辅助视觉验证
+
+Skill 不会强制使用 Next.js、React、Tailwind 或 shadcn/ui，而是遵循目标仓库已有技术栈和组件边界。
 
 ## 安全与版权边界
 
@@ -162,7 +170,8 @@ replicate-web-ui/
 ├── agents/openai.yaml
 ├── references/
 │   ├── visual-analysis.md
-│   └── compliance-boundaries.md
+│   ├── compliance-boundaries.md
+│   └── research-templates.md
 └── scripts/
     └── compare_screenshots.py
 ```
