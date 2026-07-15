@@ -7,13 +7,15 @@
 [![简体中文](https://img.shields.io/badge/简体中文-E5E7EB?style=for-the-badge)](./README.md)
 [![English](https://img.shields.io/badge/English-111827?style=for-the-badge)](./README_EN.md)
 
-A frontend visual migration skill for Codex.
+A frontend visual migration Agent Skill that works across AI coding agents.
 
 </div>
 
 ## What It Is
 
-`replicate-web-ui` is a Codex Skill. Give it a reference URL or screenshot and a target project path. Codex analyzes the reference design system and rebuilds the experience using the target project's existing frontend stack.
+`replicate-web-ui` follows the open [Agent Skills specification](https://agentskills.io/specification). Give it a reference URL or screenshot and a target project path. A compatible AI coding agent analyzes the reference design system and rebuilds the experience using the target project's existing frontend stack.
+
+It is not tied to one model or product. Use it with Agent Skills-compatible tools, or ask any AI agent with file, browser, terminal, and code-editing capabilities to read `SKILL.md` and follow the workflow directly.
 
 It does not simply download website source code. It follows a verifiable implementation workflow:
 
@@ -32,25 +34,35 @@ It does not simply download website source code. It follows a verifiable impleme
 - Rebuild a company-owned website at high fidelity after confirming authorization
 - Extract a reference site's design language without copying its brand identity
 
-## Installation
+## Universal Installation
 
-Run in Windows PowerShell:
+The recommended project-level location is `.agents/skills/`. Run from your project root:
 
 ```powershell
-git clone https://github.com/hxy180/replicate-web-ui.git "$env:USERPROFILE\.codex\skills\replicate-web-ui"
+git clone https://github.com/hxy180/replicate-web-ui.git .agents/skills/replicate-web-ui
 ```
 
-If the repository is already downloaded, copy the complete folder to:
+Agent Skills-compatible tools can discover this directory automatically. Some clients also support product-specific skill directories; follow the documentation for your chosen tool.
+
+### Tools Without Automatic Skill Discovery
+
+Clone the repository anywhere:
+
+```powershell
+git clone https://github.com/hxy180/replicate-web-ui.git
+```
+
+Then ask the agent to read:
 
 ```text
-%USERPROFILE%\.codex\skills\replicate-web-ui
+replicate-web-ui/SKILL.md
 ```
 
-Restart Codex after installation.
+Any agent that can read files, inspect a reference website, edit the target project, and run commands can follow the workflow.
 
 ## Usage
 
-Invoke the Skill explicitly in Codex:
+When your agent supports Skill invocation syntax, use:
 
 ```text
 Use $replicate-web-ui.
@@ -62,10 +74,10 @@ Fidelity: close
 Requirements: preserve the scroll motion, use my branding, and support mobile.
 ```
 
-If the Skill is not installed in the default Codex directory, provide its path directly:
+You can also provide the `SKILL.md` path directly to any AI coding agent:
 
 ```text
-Use D:\skills\replicate-web-ui\SKILL.md to rebuild the Hero section
+Read and follow D:\skills\replicate-web-ui\SKILL.md to rebuild the Hero section
 from https://example.com in my current React project.
 ```
 
@@ -140,9 +152,11 @@ replicate-web-ui/
     └── compare_screenshots.py
 ```
 
+`SKILL.md`, `references/`, and `scripts/` are platform-neutral. `agents/openai.yaml` is an optional adapter for OpenAI/Codex clients that support that metadata format; other agents can ignore it.
+
 ## Dependencies
 
-Codex executes the Skill itself. The screenshot comparison helper requires Python 3 and Pillow:
+The Skill requires an AI agent that can read files, use a browser, edit code, and run terminal commands. The screenshot comparison helper requires Python 3 and Pillow:
 
 ```powershell
 python -m pip install Pillow

@@ -7,13 +7,15 @@
 [![简体中文](https://img.shields.io/badge/简体中文-111827?style=for-the-badge)](./README.md)
 [![English](https://img.shields.io/badge/English-E5E7EB?style=for-the-badge)](./README_EN.md)
 
-一个面向 Codex 的前端视觉迁移 Skill。
+一个可跨 AI 编程代理使用的前端视觉迁移 Agent Skill。
 
 </div>
 
 ## 这是什么
 
-`replicate-web-ui` 是一个 Codex Skill。你只需要提供参考网址或截图，以及自己的项目路径，Codex 就会分析参考页面的设计系统，并使用目标项目现有的技术栈重新实现。
+`replicate-web-ui` 遵循开放的 [Agent Skills 规范](https://agentskills.io/specification)。你只需要提供参考网址或截图，以及自己的项目路径，支持 Skill 的 AI 编程代理就会分析参考页面的设计系统，并使用目标项目现有的技术栈重新实现。
+
+它不绑定某个模型或产品。可以用于支持 Agent Skills 的工具，也可以让任意具备文件读取、浏览器和终端能力的 AI 代理直接读取 `SKILL.md` 后执行。
 
 它不是简单下载网页源码，而是完成一套可验证的前端迁移流程：
 
@@ -32,25 +34,35 @@
 - 在获得授权后，高精度还原自己公司已有的网站
 - 提取参考网站的设计语言，而不是复制其品牌内容
 
-## 安装
+## 通用安装
 
-在 Windows PowerShell 中运行：
+推荐安装到项目级通用目录 `.agents/skills/`。在项目根目录运行：
 
 ```powershell
-git clone https://github.com/hxy180/replicate-web-ui.git "$env:USERPROFILE\.codex\skills\replicate-web-ui"
+git clone https://github.com/hxy180/replicate-web-ui.git .agents/skills/replicate-web-ui
 ```
 
-如果已经下载了仓库，也可以将整个目录复制到：
+支持 Agent Skills 的工具可以自动发现该目录。不同客户端也可能使用自己的 Skill 目录，请以对应工具的文档为准。
+
+### 不支持 Skill 自动发现的工具
+
+将仓库克隆到任意位置：
+
+```powershell
+git clone https://github.com/hxy180/replicate-web-ui.git
+```
+
+然后在提示词中要求代理先读取：
 
 ```text
-%USERPROFILE%\.codex\skills\replicate-web-ui
+replicate-web-ui/SKILL.md
 ```
 
-重新打开 Codex 后即可使用。
+只要代理能够读取文件、访问参考网页、编辑目标项目并运行命令，就能使用这套工作流。
 
 ## 使用方法
 
-在 Codex 中明确调用 Skill：
+支持 Skill 调用语法时，可以这样使用：
 
 ```text
 使用 $replicate-web-ui
@@ -62,10 +74,10 @@ git clone https://github.com/hxy180/replicate-web-ui.git "$env:USERPROFILE\.code
 要求：保留滚动动画，替换成我的品牌，并适配手机端。
 ```
 
-如果 Skill 没有安装到 Codex 默认目录，也可以直接提供路径：
+也可以直接提供 `SKILL.md` 路径，适用于任何 AI 编程代理：
 
 ```text
-使用 D:\skills\replicate-web-ui\SKILL.md，
+先读取并遵循 D:\skills\replicate-web-ui\SKILL.md，
 把 https://example.com 的 Hero 区域迁移到我当前的 React 项目。
 ```
 
@@ -140,9 +152,11 @@ replicate-web-ui/
     └── compare_screenshots.py
 ```
 
+`SKILL.md`、`references/` 和 `scripts/` 是通用部分。`agents/openai.yaml` 仅用于支持该元数据格式的 OpenAI/Codex 客户端，不影响其他代理使用。
+
 ## 依赖
 
-Skill 本身由 Codex 执行。截图差异脚本需要 Python 3 和 Pillow：
+Skill 需要一个能够读取文件、使用浏览器、编辑代码并运行终端命令的 AI 代理。截图差异脚本需要 Python 3 和 Pillow：
 
 ```powershell
 python -m pip install Pillow
